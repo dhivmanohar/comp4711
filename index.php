@@ -5,50 +5,29 @@
         <title></title>
     </head>
     <body>
-        <?php
-            echo 'tic tac toe';
-            $position = $_GET['board'];
-            if(!isset($_GET['board'])){
-                echo 'not set';
+        <?php 
+            
+            require_once 'Game.php';// including Game class            
+            $squares = $_GET['board'];// gettings all the different squares
+            if ($squares == "") { // check to see if board squares were declared
+                $squares = "---------";
             }
-            $squares = str_split($position);
-            if(winner('x',$squares)){
-                echo 'You win.';
+            $gamefinished = false; // variable to see if game has ended
+            $game = new Game($squares); // create new Game object
+            $game->pick_move(); // AI picks a moves
+            if($game -> winner('x')){ //checks to see if it meets winning conditions
+                echo 'You win';
+                $gamefinished = true;
             }
-            else if(winner('o', $squares)){
+            else if ($game -> winner ('o')){
                 echo 'I win';
+                $gamefinished = true;
             }
-            else {
-                echo 'No winner yet.';
+            else{
+                echo 'Draw';
             }
+            $game->display($gamefinished); //displays board
         ?>
     </body>
 </html>
-<?php
-    function winner($token,$position){
-        $won = false;
-        //horizontal
-        for($row = 0; $row < 3; $row++){
-            $won = true;
-            for($col = 0; $col < 3; $col++){
-                if($position[3* ($row + $col)] != $token)
-                    $won = false;
-            }
-        }
-        //fix logic
-        /*
-        $won = false;
-        if(($position[0] == $token)&&
-            ($position[1] == $token)&&
-            ($position[2] == $token)) {
-            $won = true;
-        } else if(($position[3] == $token) &&
-                  ($position[4] == $token) &&
-                  ($position[5] == $token)){
-            $won = true;
-        }
-        */
-        return $won;
-    }
-?>
 
